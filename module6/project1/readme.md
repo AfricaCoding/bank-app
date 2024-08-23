@@ -1,32 +1,100 @@
-### **41. Système de Gestion de Parcours Santé**
+# kotlinx-io
 
-- **Description :** Développez un système pour gérer des parcours santé avec suivi des activités physiques, gestion des nutritionnistes, et création de plans personnalisés pour les utilisateurs.
-- **Classes :**
-    - **Utilisateur :** Représente un utilisateur du système qui souhaite suivre un parcours de santé.
-        - `enregistrerActivité(Activité activité)`: Permet à l'utilisateur d'enregistrer une activité physique (ex: marche, course, natation).
-        - `afficherProgression()`: Affiche la progression de l'utilisateur dans son parcours de santé (ex: calories brûlées, objectifs atteints).
-        - `choisirNutritionniste(Nutritionniste nutritionniste)`: Permet à l'utilisateur de choisir un nutritionniste pour un suivi personnalisé.
-    - **Activité :** Représente une activité physique effectuée par l'utilisateur.
-        - `getDetails()`: Affiche les détails de l'activité comme le type, la durée, et les calories brûlées.
-        - `calculerCaloriesBrûlées()`: Calcule le nombre de calories brûlées en fonction de la durée et du type d'activité.
-    - **Nutritionniste :** Représente un nutritionniste qui aide les utilisateurs à élaborer un plan nutritionnel.
-        - `créerPlanNutritionnel(Utilisateur utilisateur)`: Crée un plan nutritionnel personnalisé pour un utilisateur en fonction de ses objectifs.
-        - `suivreProgression(Utilisateur utilisateur)`: Suit la progression d'un utilisateur et ajuste le plan nutritionnel si nécessaire.
-    - **PlanSanté :** Représente un plan de santé personnalisé pour l'utilisateur.
-        - `ajouterActivité(Activité activité)`: Ajoute une activité au plan de santé de l'utilisateur.
-        - `afficherPlan()`: Affiche le plan de santé complet avec les activités physiques et les recommandations nutritionnelles.
-        - `mettreÀJourObjectifs(String nouveauxObjectifs)`: Met à jour les objectifs de santé de l'utilisateur (ex: perte de poids, renforcement musculaire).
-    - **SystèmeSanté :** Représente le système de gestion des parcours santé.
-        - `ajouterUtilisateur(Utilisateur utilisateur)`: Inscrit un utilisateur au système de gestion des parcours santé.
-        - `gérerPlansSanté()`: Gère les plans de santé personnalisés pour les utilisateurs.
-        - `générerRapportSanté()`: Génère un rapport sur la santé des utilisateurs, y compris les activités effectuées et les progrès réalisés.
+[![Kotlin Alpha](https://kotl.in/badges/alpha.svg)](https://kotlinlang.org/docs/components-stability.html)
+[![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
+[![GitHub license](https://img.shields.io/github/license/kotlin/kotlinx-io)](LICENSE)
+[![Download](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/kotlinx-io-core)](https://central.sonatype.com/artifact/org.jetbrains.kotlinx/kotlinx-io-core/)
+[![Kotlin](https://img.shields.io/badge/kotlin-2.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![TeamCity build](https://img.shields.io/teamcity/build/s/KotlinTools_KotlinxIo_BuildAggregated.svg?server=http%3A%2F%2Fteamcity.jetbrains.com)](https://teamcity.jetbrains.com/viewType.html?buildTypeId=KotlinTools_KotlinxIo_BuildAggregated&guest=1)
+[![KDoc link](https://img.shields.io/badge/API_reference-KDoc-blue)](https://kotlin.github.io/kotlinx-io/)
 
-- **Logique :**
-    - La classe `Utilisateur` gère l'enregistrement des activités physiques, le suivi de la progression, et la sélection d'un nutritionniste.
-    - La classe `Activité` gère les détails des activités physiques et le calcul des calories brûlées.
-    - La classe `Nutritionniste` crée et ajuste des plans nutritionnels personnalisés pour les utilisateurs.
-    - La classe `PlanSanté` gère l'ajout d'activités, l'affichage du plan de santé, et la mise à jour des objectifs de l'utilisateur.
-    - La classe `SystèmeSanté` gère l'inscription des utilisateurs, la gestion des plans de santé, et la génération de rapports sur la santé des utilisateurs.
+A multiplatform Kotlin library providing basic IO primitives. `kotlinx-io` is based on [Okio](https://github.com/square/okio) but does not preserve backward compatibility with it.
 
----
+## Overview
+**kotlinx-io** is built around `Buffer` - a mutable sequence of bytes.
 
+`Buffer` works like a queue, allowing to read data from its head or to write data to its tail.
+`Buffer` provides functions to read and write data of different built-in types, and to copy data to or from other `Buffer`s.
+Depending on the target platform, extension functions allowing data exchange with platform-specific types are also available.
+
+A `Buffer` consists of segments organized as a linked list: segments allow reducing memory allocations during the buffer's expansion and copy,
+with the latter achieved by delegating or sharing the ownership over the underlying buffer's segments with other buffers.
+
+**kotlinx-io** provides interfaces representing data sources and destinations - `Source` and `Sink`,
+and in addition to the *mutable* `Buffer` the library also provides an *immutable* sequence of bytes - `ByteString`.
+
+An experimental filesystem support is shipped under the `kotlinx.io.files` package,
+which includes the `FileSystem` interface and its default implementation - `SystemFileSystem`.
+
+`FileSystem` provides basic operations for working with files and directories, which are represented by yet another class under the same package - `Path`.
+
+There are two `kotlinx-io` modules:
+- [kotlinx-io-bytestring](./bytestring) - provides `ByteString`.
+- [kotlinx-io-core](./core) - provides IO primitives (`Buffer`, `Source`, `Sink`), filesystems support, depends on `kotlinx-io-bytestring`.
+
+## Using in your projects
+
+> Note that the library is experimental, and the API is subject to change.
+
+### Gradle
+
+Make sure that you have `mavenCentral()` in the list of repositories:
+```kotlin
+repositories {
+    mavenCentral()
+}
+```
+
+Add the library to dependencies:
+```kotlin
+dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.5.3")
+}
+```
+
+In multiplatform projects, add a dependency to the `commonMain` source set dependencies:
+```kotlin
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.5.3")
+            }
+        }
+    }
+}
+```
+
+### Maven
+
+Add the library to dependencies:
+```xml
+<dependency>
+    <groupId>org.jetbrains.kotlinx</groupId>
+    <artifactId>kotlinx-io-core-jvm</artifactId>
+    <version>0.5.3</version>
+</dependency>
+```
+
+### Android
+
+`kotlinx-io` is not tested on Android on a regular basis,
+but the library is compatible with Android 5.0+ (API level 21+).
+
+## Contributing
+
+Read the [Contributing Guidelines](CONTRIBUTING.md).
+
+## Code of Conduct
+This project and the corresponding community are governed by the [JetBrains Open Source and Community Code of Conduct](https://confluence.jetbrains.com/display/ALL/JetBrains+Open+Source+and+Community+Code+of+Conduct). Please make sure you read it.
+
+## License
+kotlinx-io is licensed under the [Apache 2.0 License](LICENSE).
+
+## Credits
+
+Thanks to everyone involved in the project.
+
+An honorable mention goes to the developers of [Okio](https://square.github.io/okio/)
+that served as the foundation for `kotlinx-io` and to [Jesse Wilson](https://github.com/swankjesse),
+for the help with `Okio` adaption, his suggestions, assistance and guidance with `kotlinx-io` development.
