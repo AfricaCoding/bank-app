@@ -2,7 +2,7 @@ package com.africacoding.app;
 
 import java.util.List;
 
-public class Calculateur<T extends Number > {
+public class Calculateur<T extends Number> {
 
     private T valeur;
 

@@ -9,6 +9,6 @@ public class MainCalculateur {
 
 //        System.out.println(calcInt.doubler());
 
-        Calculateur.ajouterNombre(List.of(2,5));
+        Calculateur.ajouterNombre(List.of(2, 5));
     }
 }

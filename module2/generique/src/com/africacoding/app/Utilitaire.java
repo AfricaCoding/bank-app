@@ -6,6 +6,7 @@ public class Utilitaire {
             System.out.println(element);
         }
     }
+
     public static void main(String[] args) {
         String[] tableauDeString = {"A", "B", "C"};
         Integer[] tableauDeNombre = {1, 2, 3};
